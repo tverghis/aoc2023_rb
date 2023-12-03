@@ -1,10 +1,10 @@
 require 'minitest/autorun'
 require_relative 'main'
 
-class MatrixTest < Minitest::Test
+class EngineSchematicTest < Minitest::Test
   def test_from_lines
     lines = [".1.", "2*.", "3.."]
-    m = Matrix.from_lines(lines)
+    m = EngineSchematic.from_lines(lines)
 
     assert_equal [%w(. 1 .), %w(2 * .), %w(3 . .)], m.matrix
     assert_equal 3, m.num_rows
@@ -24,7 +24,7 @@ class MatrixTest < Minitest::Test
       "...$.*....",
       ".664.598.."
     ]
-    m = Matrix.from_lines(lines)
+    m = EngineSchematic.from_lines(lines)
 
     assert [467, 35, 633, 617, 592, 755, 664, 598].all? { |n| m.part_numbers.include? n }
   end
@@ -42,7 +42,7 @@ class MatrixTest < Minitest::Test
       "...$.*....",
       ".664.598.."
     ]
-    m = Matrix.from_lines(lines)
+    m = EngineSchematic.from_lines(lines)
 
     assert [467 * 35, 755 * 598].all? { |n| m.gear_ratios.include? n }
   end

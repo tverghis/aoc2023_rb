@@ -1,4 +1,4 @@
-class Matrix
+class EngineSchematic
   attr_accessor :matrix
 
   def initialize(matrix)
@@ -7,7 +7,7 @@ class Matrix
 
   def self.from_lines(lines)
     matrix = lines.map { |l| l.chars }
-    Matrix.new(matrix)
+    EngineSchematic.new(matrix)
   end
 
   def num_rows
@@ -19,7 +19,7 @@ class Matrix
   end
 
   def part_numbers
-    visited = matrix.map { |row| row.map { |col| false } }
+    visited = @matrix.map { |row| row.map { |col| false } }
     part_numbers = []
 
     for i in 0...num_rows
@@ -96,7 +96,7 @@ def symbol?(c)
 end
 
 if __FILE__ == $0
-  m = Matrix.from_lines(File.readlines("input.txt"))
+  m = EngineSchematic.from_lines(File.readlines("input.txt"))
 
   puts "Part 1: #{m.part_numbers.sum}"
   puts "Part 2: #{m.gear_ratios.sum}"
