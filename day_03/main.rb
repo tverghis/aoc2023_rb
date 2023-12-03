@@ -24,21 +24,8 @@ class Matrix
 
     for i in 0...num_rows
       for j in 0...num_cols
-        if !visited[i][j] && part_number?(i, j)
-          n_start = n_end = j
-          visited[i][j] = true
-
-          while (n_start - 1 >= 0) && (digit?(@matrix[i][n_start - 1]))
-            n_start -= 1
-            visited[i][n_start] = true
-          end
-
-          while (n_end + 1 <= num_cols) && (digit?(@matrix[i][n_end + 1]))
-            n_end += 1
-            visited[i][n_end] = true
-          end
-
-          part_numbers << @matrix[i][n_start..n_end].join.to_i
+        if symbol?(@matrix[i][j])
+          adjacent_numbers(i, j, visited).each { |n| part_numbers << n }
         end
       end
     end
@@ -46,23 +33,56 @@ class Matrix
     part_numbers
   end
 
-  private
+  def gear_ratios
+    visited = matrix.map { |row| row.map { |col| false } }
+    ratios = []
 
-  def part_number?(ridx, cidx)
-    for r in ridx-1..ridx+1
-      for c in cidx-1..cidx+1
-        if (r < 0) || (r >= num_rows) ||
-            (c < 0) || (c >= num_rows)
-          next
-        end
-
-        if digit?(@matrix[ridx][cidx]) && symbol?(@matrix[r][c])
-          return true
+    for i in 0...num_rows
+      for j in 0...num_cols
+        if @matrix[i][j] == "*"
+          adjacent = adjacent_numbers(i, j, visited)
+          if adjacent.length == 2
+            ratios << adjacent.inject(:*)
+          end
         end
       end
     end
 
-    false
+    ratios
+  end
+
+  private
+
+  def adjacent_numbers(ridx, cidx, visited)
+    adj = []
+    for r in ridx-1..ridx+1
+      for c in cidx-1..cidx+1
+        if (r < 0) || (r >= num_rows) ||
+            (c < 0) || (c >= num_rows) ||
+            visited[r][c]
+          next
+        end
+
+        if digit?(@matrix[r][c])
+          n_start = n_end = c
+          visited[r][c] = true
+
+          while (n_start - 1 >= 0) && (digit?(@matrix[r][n_start - 1]))
+            n_start -= 1
+            visited[r][n_start] = true
+          end
+
+          while (n_end + 1 <= num_cols) && (digit?(@matrix[r][n_end + 1]))
+            n_end += 1
+            visited[r][n_end] = true
+          end
+
+          adj << @matrix[r][n_start..n_end].join.to_i
+        end
+      end
+    end
+
+    adj
   end
 end
 
@@ -79,4 +99,5 @@ if __FILE__ == $0
   m = Matrix.from_lines(File.readlines("input.txt"))
 
   puts "Part 1: #{m.part_numbers.sum}"
+  puts "Part 2: #{m.gear_ratios.sum}"
 end

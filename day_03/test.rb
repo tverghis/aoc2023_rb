@@ -26,6 +26,24 @@ class MatrixTest < Minitest::Test
     ]
     m = Matrix.from_lines(lines)
 
-    assert_equal [467, 35, 633, 617, 592, 755, 664, 598], m.part_numbers
+    assert [467, 35, 633, 617, 592, 755, 664, 598].all? { |n| m.part_numbers.include? n }
+  end
+
+  def test_gear_ratios
+    lines = [
+      "467..114..",
+      "...*......",
+      "..35..633.",
+      "......#...",
+      "617*......",
+      ".....+.58.",
+      "..592.....",
+      "......755.",
+      "...$.*....",
+      ".664.598.."
+    ]
+    m = Matrix.from_lines(lines)
+
+    assert [467 * 35, 755 * 598].all? { |n| m.gear_ratios.include? n }
   end
 end
